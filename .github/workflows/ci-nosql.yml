@@ -1,0 +1,32 @@
+name: CI - microservicio NoSQL
+on:
+  push:
+    paths:
+      - "microservicio-nosql-calidad/**"
+      - ".github/workflows/ci-nosql.yml"
+  pull_request:
+    paths:
+      - "microservicio-nosql-calidad/**"
+      - ".github/workflows/ci-nosql.yml"
+  workflow_dispatch:
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: microservicio-nosql-calidad
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+      - name: Ejecutar pruebas y validar cobertura JaCoCo
+        run: mvn --batch-mode clean verify
+      - name: Publicar reporte JaCoCo
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: microservicio-nosql-calidad/target/site/jacoco/
