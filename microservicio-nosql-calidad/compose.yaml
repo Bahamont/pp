@@ -1,0 +1,29 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: contactos-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: contactosdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  app:
+    build: .
+    container_name: contactos-api
+    restart: unless-stopped
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/contactosdb
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+volumes:
+  mongo_data:
