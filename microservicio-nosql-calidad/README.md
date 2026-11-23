@@ -48,9 +48,9 @@ Las pruebas unitarias usan Mockito/JUnit. Las pruebas de integración levantan M
 El build valida como objetivo mínimo 80% de cobertura de líneas y 70% de ramas. Si el umbral no se alcanza, `mvn verify` falla y se debe ampliar la batería de pruebas; no se debe declarar un porcentaje hasta ejecutar la suite.
 
 ## SonarQube
-1. Levantar SonarQube Community (por ejemplo con imagen oficial `sonarqube:community`).
+1. Levantar SonarQube Community con `docker compose -f compose.sonar.yaml up -d` y abrir http://localhost:9000. En el primer acceso configura la cuenta y genera un token.
 2. Crear un proyecto con key `contactos-nosql` y generar un token.
-3. Configurar variables de entorno `SONAR_HOST_URL` y `SONAR_TOKEN`.
+3. Configurar variables de entorno `SONAR_HOST_URL=http://localhost:9000` y `SONAR_TOKEN` con el token generado.
 4. Ejecutar:
 ```bash
 mvn clean verify
